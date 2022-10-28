@@ -75,7 +75,7 @@ std::string format_double(const double number) {
 
 std::vector<std::vector<torch::jit::IValue>> get_input_tensors(
     const std::vector<std::pair<std::string, std::vector<std::string>>> &input_files,
-    const std::map<std::string, std::vector<int>> &shapes,
+    const std::map<std::string, std::vector<int64_t>> &shapes,
     const std::map<std::string, torch::Dtype> &dtypes) {
     int inputs_num = input_files[0].second.size();
     std::vector<std::vector<torch::jit::IValue>> inputs(inputs_num);
@@ -90,7 +90,7 @@ std::vector<std::vector<torch::jit::IValue>> get_input_tensors(
                                            false,
                                            size,
                                            torch::TensorOptions().dtype(dtypes.at(input_name)).device(torch::kCPU));
-            inputs[i].push_back(tensor.view({1, 128}));
+            inputs[i].push_back(tensor.view(shapes.at(input_name)));
         }
     }
     return inputs;
@@ -101,9 +101,9 @@ int main(int argc, char *argv[]) {
     try {
         logger::info << "Parsing input arguments" << logger::endl;
         parse(argc, argv);
-        std::map<std::string, std::vector<int>> shapes;
+        std::map<std::string, std::vector<int64_t>> shapes;
         for (const auto &[input_name, shape] : args::parse_parameter_string(FLAGS_shape)) {
-            shapes.emplace(input_name, args::string_to_vec<int>(shape, ','));
+            shapes.emplace(input_name, args::string_to_vec<int64_t>(shape, ','));
         }
 
         std::map<std::string, torch::Dtype> dtypes;
