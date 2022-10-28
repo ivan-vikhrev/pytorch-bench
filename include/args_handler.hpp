@@ -12,8 +12,9 @@
 #include <vector>
 
 namespace args {
-std::vector<std::pair<std::string, std::vector<std::string>>> parse_input_files_arguments(const std::vector<std::string> &args,
-                                                                            size_t max_files = 20);
+std::vector<std::pair<std::string, std::vector<std::string>>> parse_input_files_arguments(
+    const std::vector<std::string> &args,
+    size_t max_files = 20);
 
 std::map<std::string, std::string> parse_parameter_string(const std::string &parameter_string);
 

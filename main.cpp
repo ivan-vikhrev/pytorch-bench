@@ -83,7 +83,7 @@ std::vector<std::vector<torch::jit::IValue>> get_input_tensors(
         logger::info << "Input config " << i << logger::endl;
         for (const auto &[input_name, files_list] : input_files) {
             logger::info << "\t" << input_name << logger::endl;
-            logger::info << "\t\t" << files_list[i] <<  logger::endl;
+            logger::info << "\t\t" << files_list[i] << logger::endl;
             auto size =
                 std::accumulate(shapes.at(input_name).begin(), shapes.at(input_name).end(), 1, std::multiplies<int>());
             auto tensor = torch::from_file(files_list[i],
@@ -96,35 +96,6 @@ std::vector<std::vector<torch::jit::IValue>> get_input_tensors(
     return inputs;
 }
 } // namespace
-
-// template <class T>
-// std::vector<T> read_data(const std::string &file_path, const std::vector<int> &shape) {
-//     auto tensor_size = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
-//     auto input_size = tensor_size * sizeof(T);
-//     std::vector<T> tensor_data(tensor_size);
-//     char *data = reinterpret_cast<char *>(tensor_data.data());
-//     for (int b = 0; b < shape[0]; ++b) {
-//         std::ifstream binary_file(file_path, std::ios_base::binary | std::ios_base::ate);
-//         if (!binary_file) {
-//             throw std::runtime_error("Can't open " + file_path);
-//         }
-
-//         auto file_size = static_cast<std::size_t>(binary_file.tellg());
-//         if (file_size != input_size) {
-//             throw std::invalid_argument("File " + file_path + " contains " + std::to_string(file_size) +
-//                                         " bytes but the mdoel expects " + std::to_string(input_size));
-//         }
-
-//         binary_file.seekg(0, std::ios_base::beg);
-//         if (!binary_file.good()) {
-//             throw std::runtime_error("Can't read " + file_path);
-//         }
-
-//         binary_file.read(&data[b * input_size], input_size);
-//     }
-
-//     return tensor_data;
-// }
 
 int main(int argc, char *argv[]) {
     try {
